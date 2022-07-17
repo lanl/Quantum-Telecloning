@@ -1,6 +1,6 @@
 # Quantum-Telecloning
 
-This repository contains python code and data associated with the paper `Quantum Telecloning on NISQ computers`. 
+This repository contains python code and data associated with the paper [Quantum Telecloning on NISQ computers](https://arxiv.org/abs/2205.00125)
 
 The goal of this project is to implement several quantum telecloning algorithms on Quantinuum (formerly Honeywell) and IBMQ NISQ computers. 
 
