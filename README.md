@@ -10,7 +10,7 @@ In order to execute the Quantinuum experiments one needs to first install the re
 
 Then, for the purposes of computing the single state fidelity of the clones using Qiskit Ignis, a slight modification to the Qiskit Ignis source code (at least for `qiskit-ignis==0.7.1`) is required. This is explained in `modified_qiskit_ignis_code/`
 
-The code that executes these quantum telecloning circuits on IBMQ and Quantinuum backends functions by saving job ids to local storage, which can then be used to retrieve the results after all circuits have been executed. 
+The code that executes these quantum telecloning circuits on IBMQ and Quantinuum backends (`run_experiments/`) functions by saving job ids to local storage, which can then be used to retrieve the results after all circuits have been executed. 
 
 However, these circuits are small enough to be easily simulated locally. The directory `classical_simulation_code` contains all of the relevant code to execute these local simulations. These local simulations are written entirely to be Qiskit compatible (with the slight modifications to Ignis source code), meaning they do not require any account setup from IBMQ or Quantinuum. 
 
@@ -34,6 +34,14 @@ Note that these circuit drawings do not include any state tomography operations 
   year={2022}
 }
 ```
+
+## Authors
+- [Elijah Pelofske](mailto:epelofske@lanl.gov): Information Sciences, Los Alamos National Laboratory
+- [Andreas Bärtschi](mailto:baertschi@lanl.gov): Information Sciences, Los Alamos National Laboratory
+- Bryan Garcia: Department of Physics, New Mexico State University
+- Boris Kiefer: Department of Physics, New Mexico State University
+- Stephan Eidenbenz: Information Sciences, Los Alamos National Laboratory
+
 
 ## Copyright Notice:
 © 2022. Triad National Security, LLC. All rights reserved.
