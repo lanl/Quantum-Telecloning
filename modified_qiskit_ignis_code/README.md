@@ -1,19 +1,29 @@
-# Ignis modification
+# Qiskit Ignis modification
 
-`base_fitter.py` in Qiskit Ignis has been modified very slightly to accept strictly a dictionary of the form {"X": counts, "Y": counts, "Z": counts}, where counts is of the form {"0": int, "1": int}. Importantly the circuit names need to be X, Y and Z
+Qiskit Ignis is now deprecated. However, for reconstructing the clone fidelities we use a modified version of Qiskit Ignis. Specifically, a modified version of `qiskit-ignis==0.7.1`. 
 
-The original `base_fitter.py` code from Qiskit Ignis can be found here: [https://github.com/Qiskit/qiskit-ignis/blob/master/qiskit/ignis/verification/tomography/fitters/base_fitter.py](https://github.com/Qiskit/qiskit-ignis/blob/master/qiskit/ignis/verification/tomography/fitters/base_fitter.py)
+The relevant source code change lets us submit tomography data of the form {"X": counts, "Y": counts, "Z": counts}, where counts is of the form {"0": int, "1": int}. Importantly the circuit names need to be X, Y and Z. 
 
-The relevant changes are on lines 73, 74, 75; those lines should be commented out. And 72 should be modified. 
+The code that needs to be changed is `base_fitter.py`; [https://github.com/Qiskit/qiskit-ignis/blob/master/qiskit/ignis/verification/tomography/fitters/base_fitter.py](https://github.com/Qiskit/qiskit-ignis/blob/master/qiskit/ignis/verification/tomography/fitters/base_fitter.py)
+
+You will need to install qiskit ignis (`qiskit-ignis==0.7.1`) and then make the following local changes:
+
+- Line 46 should be `result: Union[Result, List[Result]],` in the installation. Change line 46 to `result,` (i.e. remove the type hint). 
+
+- Lines 72, 73, 74, 75. Originally they should look like this:
 
 ```
-# Add initial data
-self._data = result
-#if isinstance(result, Result):
-#    result = [result]  # unify results handling
-#self.add_data(result, circuits)
+72:        self._data = {}
+73:        if isinstance(result, Result):
+74:            result = [result]  # unify results handling
+75:        self.add_data(result, circuits)
 ```
 
-Lastly, line 46 need to be changed from `result: Union[Result, List[Result]],` to `result,`
+Modify these lines to be:
 
-
+```
+        self._data = result
+        #if isinstance(result, Result):
+        #    result = [result]  # unify results handling
+        #self.add_data(result, circuits)
+```
