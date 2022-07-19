@@ -12,27 +12,36 @@ Then, for the purposes of computing the single state fidelity of the clones usin
 
 The code that executes these quantum telecloning circuits on IBMQ and Quantinuum backends (`run_experiments/`) functions by saving job ids to local storage, which can then be used to retrieve the results after all circuits have been executed. 
 
-However, these circuits are small enough to be easily simulated locally. The directory `classical_simulation_code` contains all of the relevant code to execute these local simulations. These local simulations are written entirely to be Qiskit compatible (with the slight modifications to Ignis source code), meaning they do not require any account setup from IBMQ or Quantinuum. 
+However, these circuits are small enough to be easily simulated locally. The directory `classical_simulation_code` contains all of the relevant code to execute these local simulations. These local simulations are written entirely to be Qiskit compatible (with the slight modifications to Ignis source code), meaning they do not require any account setup from IBMQ or Quantinuum. In order to run the source code you will need to install python3 along with the required libraries in `requirements.txt`. You can install these requirements directly using the command `python3 -m pip install -r requirements.txt`
 
-## Run experiments on IBMQ or Quantinuum devices
+### Run experiments on IBMQ or Quantinuum devices
 The python scripts that have the capability to send jobs to the various NISQ backends are in the directory `run_experiments`
 
-## Fidelity figures
+### Fidelity figures
 The directories `figures_Quantinuum`, `figures_IBMQ_post_select`, `figures_IBMQ_deferred_measurement` contain figures which show clone fidelities as a function of varying message states when the telecloning circuits are executed on NISQ devices. 
 
-## Circuit drawings
+### Circuit drawings
 The directory `circuit_drawings/` contains Qiskit circuit drawings for all telecloning circuit variants, including mid-circuit measurement with classical condition operations. 
 
 Note that these circuit drawings do not include any state tomography operations on the clone qubits. 
 
 ## How to Cite?
 ```latex
-@article{pelofske2022quantum,
-  title={Quantum Telecloning on NISQ Computers},
-  author={Pelofske, Elijah and B{\"a}rtschi, Andreas and Garcia, Bryan and Kiefer, Boris and Eidenbenz, Stephan},
-  journal={arXiv preprint arXiv:2205.00125},
-  year={2022}
+@InProceedings{pelofske2022telecloning,
+  author        = {Pelofske, Elijah and B{\"{a}}rtschi, Andreas and Garcia, Bryan and Kiefer, Boris and Eidenbenz, Stephan},
+  booktitle     = {IEEE International Conference on Quantum Computing \& Engineering QCE'22},
+  title         = {{Quantum Telecloning on NISQ Computers}},
+  year          = {2022},
+  note          = {To appear.},
+  archiveprefix = {arXiv},
+  eprint        = {2205.00125},
 }
+```
+
+Alternatively:
+
+```
+Elijah Pelofske, Andreas Bärtschi, Bryan Garcia, Boris Kiefer, and Stephan Eidenbenz. Quantum Telecloning on NISQ Computers. In IEEE International Conference on Quantum Computing & Engineering QCE’22, 2022. To appear. arXiv:2205.00125.
 ```
 
 ## Authors

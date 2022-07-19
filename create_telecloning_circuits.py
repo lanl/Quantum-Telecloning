@@ -12,7 +12,6 @@ others to do so.
 
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
 import qiskit.quantum_info as qi
-
 import numpy
 import time
 import math
