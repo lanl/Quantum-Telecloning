@@ -26,6 +26,7 @@ The directory `circuit_drawings/` contains Qiskit circuit drawings for all telec
 Note that these circuit drawings do not include any state tomography operations on the clone qubits. 
 
 ## How to Cite?
+bibtex:
 ```latex
 @InProceedings{pelofske2022telecloning,
   author        = {Pelofske, Elijah and B{\"{a}}rtschi, Andreas and Garcia, Bryan and Kiefer, Boris and Eidenbenz, Stephan},
@@ -39,7 +40,6 @@ Note that these circuit drawings do not include any state tomography operations 
 ```
 
 Alternatively:
-
 ```
 Elijah Pelofske, Andreas Bärtschi, Bryan Garcia, Boris Kiefer, and Stephan Eidenbenz. Quantum Telecloning on NISQ Computers. In IEEE International Conference on Quantum Computing & Engineering QCE’22, 2022. To appear. arXiv:2205.00125.
 ```

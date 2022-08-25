@@ -8,8 +8,6 @@ The code that needs to be changed is `base_fitter.py`; [https://github.com/Qiski
 
 You will need to install qiskit ignis (`qiskit-ignis==0.7.1`) and then make the following local changes:
 
-- Line 46 should be `result: Union[Result, List[Result]],` in the installation. Change line 46 to `result,` (i.e. remove the type hint). 
-
 - Lines 72, 73, 74, 75. Originally they should look like this:
 
 ```
