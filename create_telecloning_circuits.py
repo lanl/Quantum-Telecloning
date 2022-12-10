@@ -38,10 +38,48 @@ def message_ry_rz(angle_ry, angle_rz):
 def fracAngle(l,n):
     return 2*numpy.arccos(numpy.sqrt(l/n))
 
+
+''' Split & Cyclic Shift Unitary SCS
+    creates a circuit such that SCS(m) |0^(n-l)1^l⟩ = sqrt(l/n)|1 0^(n-l) 1^(l-1)⟩ + sqrt(1-l/n)|0^(n-l)1^l⟩
+'''
+def SCS(m=2):
+    qr_SCS = QuantumRegister(m, name='qSCS{}{}'.format(m,m))
+    qc_SCS = QuantumCircuit(qr_SCS)
+    # circuit, little endian
+    # blocki
+    qc_SCS.ry(1.0*(numpy.pi)/2, 1)
+    qc_SCS.cx(1,0)
+    qc_SCS.ry(0.5*fracAngle(m-1,m),[0,1])
+    qc_SCS.cx(1,0)
+    qc_SCS.ry(-1.0*(numpy.pi)/2,1)
+    # blockii
+    for i in range(1,m-1):
+        qc_SCS.cx(i,i+1)
+        qc_SCS.ry(-0.25*fracAngle(i+1,m),i)
+        qc_SCS.cx(i-1, i)
+        qc_SCS.ry(0.25*fracAngle(i+1,m),i)
+        qc_SCS.cx(i+1, i)
+        qc_SCS.ry(-0.25*fracAngle(i+1,m),i)
+        qc_SCS.cx(i-1, i)
+        qc_SCS.ry(0.25*fracAngle(i+1,m),i)
+        qc_SCS.cx(i,i+1)
+    # return
+    return qc_SCS
+
+
 ''' Dicke State Unitary DSU
     creates a circuit such that DSU(m) |0^(n-l)1^l⟩ = |D^n_l⟩
 '''
 def DSU(m=2):
+    qr_DSU = QuantumRegister(m, name='qU{}{}'.format(m,m))
+    qc_DSU = QuantumCircuit(qr_DSU)
+    # circuit, little endian
+    for l in range(m,1,-1):
+        qc_DSU.compose(SCS(l), qubits=[*range(0,l)], inplace=True)
+    # return
+    return qc_DSU
+''' old version '''
+def DSU_old(m=2):
     qr_DSU = QuantumRegister(m, name='qU{}{}'.format(m,m))
     qc_DSU = QuantumCircuit(qr_DSU)
     # circuit, little endian
@@ -65,6 +103,7 @@ def DSU(m=2):
             qc_DSU.cx(i,i+1)
     # return
     return qc_DSU
+
 
 ''' inputHW
     - creates the entangled Hamming Weight Superpositions to be fed into Dicke State Unitaries
@@ -138,9 +177,12 @@ def inputHW(m=2,ancilla=True,topology='LNN'):
 ''' TCstate
     creates TeleCloning State, depending on availability of ancillas:
     - A^(m-1) P C^m: m-1 Ancillas, 1 Port qubits, m Clone qubits
-    - P C^m: 1 Port qubit, m Clone qubits, only for m<=3
+    - P C^m: 1 Port qubit, m Clone qubits, only for m<=3    
+    - anc_opt:  Optimizes DSU(m) to SCS(m) on the ancilla+port qubits
+                False   for legacy reasons / backwards compatibility to QCE paper
+                True    for newer Quantinuum experiments 
 '''
-def TCstate(m=2,ancilla=True,topology='LNN'):
+def TCstate(m=2,ancilla=True,topology='LNN',anc_opt=False):
     qr_TCstate = QuantumRegister(2*m if ancilla else m+1, name='qTCstate')
     qc_TCstate = QuantumCircuit(qr_TCstate)
 
@@ -148,7 +190,10 @@ def TCstate(m=2,ancilla=True,topology='LNN'):
     qc_TCstate.compose(inputHW(m,ancilla,topology), inplace=True)
     # feed into dicke state unitary(ies)
     if (ancilla):
-        qc_TCstate.compose(DSU(m), qubits=[*range(0,m)], inplace=True)
+        if (anc_opt):
+            qc_TCstate.compose(SCS(m), qubits=[*range(0,m)], inplace=True)
+        else:
+            qc_TCstate.compose(DSU(m), qubits=[*range(0,m)], inplace=True)
         qc_TCstate.compose(DSU(m), qubits=[*range(2*m-1,m-1,-1)], inplace=True)
     else:
         qc_TCstate.compose(DSU(m), qubits=[*range(1,m+1)], inplace=True)
@@ -246,15 +291,18 @@ def LOCC(m=2,ancilla=True,topology='LNN',locc='dfm', Qiskit_if_statements=True):
                 'ps01' for postselecting 01, Z-gate
                 'ps10' for postselecting 10, X-gate
                 'ps11' for postselecting 11, X-gate followed by Z-gate
+    - anc_opt:  Optimizes DSU(m) to SCS(m) on the ancilla+port qubits
+                False   for legacy reasons / backwards compatibility to QCE paper
+                True    for newer Quantinuum experiments 
 '''
-def construct_circuit(ryangle, rzangle, m, ancilla, topology, locc, Qiskit_version_if_statements):
+def construct_circuit(ryangle, rzangle, m, ancilla, topology, locc, Qiskit_version_if_statements, anc_opt=False):
     # setup circuit
     width = 2*m+1 if ancilla else m+2
     qc = QuantumCircuit(width, width)
     # setup message, TCstate, locc
     qc_message = message_ry_rz(ryangle, rzangle)
     rho = qi.DensityMatrix.from_instruction(qc_message)
-    qc_TCstate = TCstate(m,ancilla,topology)
+    qc_TCstate = TCstate(m,ancilla,topology,anc_opt)
     qc_LOCC, qpos, HQS_QASM = LOCC(m,ancilla,topology,locc, Qiskit_version_if_statements)
     # compose circuit
     qc.compose(qc_message, qubits=[0], inplace=True)
@@ -268,8 +316,7 @@ def construct_circuit(ryangle, rzangle, m, ancilla, topology, locc, Qiskit_versi
     if Qiskit_version_if_statements:
         return qc, qpos['clones'], rho
     else:
-        return qc, qpos['clones'], rho, HQS_QASM
-    
+        return qc, qpos['clones'], rho, HQS_QASM    
 
 ''' IBM
     - 2 clones
