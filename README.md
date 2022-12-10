@@ -33,9 +33,19 @@ bibtex:
   booktitle     = {IEEE International Conference on Quantum Computing \& Engineering QCE'22},
   title         = {{Quantum Telecloning on NISQ Computers}},
   year          = {2022},
-  note          = {To appear.},
+  doi           = {10.1109/QCE53715.2022.00083}
   archiveprefix = {arXiv},
   eprint        = {2205.00125},
+}
+
+@article{pelofske2022_M9_telecloning,
+  doi = {10.48550/ARXIV.2210.10164},
+  url = {https://arxiv.org/abs/2210.10164},
+  author = {Pelofske, Elijah and Bärtschi, Andreas and Eidenbenz, Stephan},
+  title = {Optimized Telecloning Circuits: Theory and Practice of Nine NISQ Clones},
+  archiveprefix = {arXiv},
+  year = {2022},
+  eprint = {2210.10164},
 }
 ```
 
