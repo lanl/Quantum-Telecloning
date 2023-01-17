@@ -87,7 +87,6 @@ def save_matrix(matrix, state_labels, filename):
 	fig = plt.gcf()
 	fig.set_size_inches(8, 6)
 	plt.tight_layout()
-	#plt.savefig("measurement_error_calibration_matrices/deferred_measurement_"+TYPE+"_"+device_name+subgraph_name+"_"+str(N_shots)+"_"+str(N_Angle_slices)+".pdf")
 	plt.savefig(filename)
 	plt.close(fig)
 def pull_only_measured_indices(counts, indices):
@@ -184,7 +183,6 @@ def get_single_qubit_measurements_from_parallel_results_with_postselection(count
 			ones += counts[bitstring]
 		elif bitstring_reversed[index] == "0":
 			zeros += counts[bitstring]
-	#print("Proportion kept = ", (zeros+ones) / float(total))
 	single_qubit_counts = {"0": zeros, "1": ones}
 	return single_qubit_counts
 def append_parallel_qubit_tomography_to_Honeywell_QASM(qubit_indices, circuit):
